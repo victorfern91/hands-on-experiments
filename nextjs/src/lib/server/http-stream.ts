@@ -22,7 +22,7 @@ export class HttpStream {
     if (!this.controller) {
       throw new Error('Stream not ready');
     }
-    this.controller.enqueue(this.encoder.encode(JSON.stringify({ event, ...data }) + '\n'));
+    this.controller.enqueue(this.encoder.encode(JSON.stringify({ event, data, timestamp: Date.now() }) + '\n'));
   }
 
   close() {

@@ -1,22 +1,21 @@
 import {HttpStream} from "@/lib/server/http-stream";
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function simulateLongComputation(stream  ) {
+  stream.write('agent', { id: 'search-agent', message: 'Starting looking flights from OPO to LAX ??️', loading: true, timestamp: new Date().toISOString() });
+  await delay(2000);
+  stream.write('agent', { id: 'search-agent', message: 'Found 3 flights', loading: false, timestamp: new Date().toISOString() });
+
+  stream.close();
+}
+
 export async function GET() {
   const stream = new HttpStream();
 
-  const words = ['hello', 'victor', 'this', 'is', 'a', 'streamed', 'message'];
-
-  (async() => {
-    for (const word of words) {
-      for (const char of  (` ${word}`).split('')) {
-        stream.write('message', {content: char});
-        await new Promise((r) => setTimeout(r, 50));
-      }
-
-      await new Promise((r) => setTimeout(r, 300));
-    }
-
-    stream.close();
-  })();
+  void simulateLongComputation(stream);
 
   return new Response(stream.stream, {
     headers: {

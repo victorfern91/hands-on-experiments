@@ -1,14 +1,29 @@
 'use client';
 
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
+interface UseHttpStreamOptions {
+  url: string;
+  options: {
+    onMessage: (message: StreamMessage) => void;
+    onError?: (error: Error) => void;
+    enabled?: boolean;
+  }
+}
 
-export default function useHttpStream(url: string /*, onMessage: (message: string) => void */) {
-  const [messages, setMessages] = useState<string[]>([]);
-  useEffect(() => {
-    async function fetchStream() {
-     const response = await fetch(url);
+export default function useHttpStream({ url, options = { enabled: false } }: UseHttpStreamOptions) {
+  const [ isLoading, setIsLoading] = useState(false);
+  const [ isError, setIsError] = useState(false);
 
+  async function fetchStream() {
+    try {
+      setIsLoading(true);
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        setIsError(true);
+      }
 
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
@@ -22,21 +37,26 @@ export default function useHttpStream(url: string /*, onMessage: (message: strin
 
         // Split by newlines in case multiple chunks arrive at once
         for (const line of textChunk.trim().split('\n')) {
-          try {
-            const parsed = JSON.parse(line);
-            setMessages(prev => prev + parsed.content);
-          } catch (err) {
-            console.error('Error parsing JSON chunk', err);
-          }
+          options.onMessage(JSON.parse(line) as StreamMessage);
         }
       }
-
+      setIsLoading(false);
+    } catch(error) {
+      console.error(error);
+      setIsError(true);
+      options.onError?.(error as Error);
     }
+  }
 
-    void fetchStream();
-  }, []);
+  useEffect(() => {
+    if (options.enabled) {
+      void fetchStream();
+    }
+  }, [options.enabled]);
 
   return {
-    messages,
+    isLoading,
+    isError,
+    messages: []
   }
 }

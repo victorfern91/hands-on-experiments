@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "victorfern91 - NextJS Tests",
@@ -8,14 +9,12 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">
       <body className="h-screen w-screen">
-        <main className="container mx-auto">
-          {children}
-        </main>
+        {children}
       </body>
     </html>
   );
