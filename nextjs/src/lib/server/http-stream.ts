@@ -20,9 +20,13 @@ export class HttpStream {
 
   write(event: string, data: Record<string, unknown>) {
     if (!this.controller) {
-      throw new Error('Stream not ready');
+      throw new Error("Stream not ready");
     }
-    this.controller.enqueue(this.encoder.encode(JSON.stringify({ event, data, timestamp: Date.now() }) + '\n'));
+    this.controller.enqueue(
+      this.encoder.encode(
+        JSON.stringify({ event, data, timestamp: Date.now() }) + "\n",
+      ),
+    );
   }
 
   close() {

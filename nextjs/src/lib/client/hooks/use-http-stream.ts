@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 
@@ -8,12 +8,15 @@ interface UseHttpStreamOptions {
     onMessage: (message: StreamMessage) => void;
     onError?: (error: Error) => void;
     enabled?: boolean;
-  }
+  };
 }
 
-export default function useHttpStream({ url, options = { enabled: false } }: UseHttpStreamOptions) {
-  const [ isLoading, setIsLoading] = useState(false);
-  const [ isError, setIsError] = useState(false);
+export default function useHttpStream({
+  url,
+  options = { enabled: false },
+}: UseHttpStreamOptions) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   async function fetchStream() {
     try {
@@ -36,12 +39,12 @@ export default function useHttpStream({ url, options = { enabled: false } }: Use
         const textChunk = decoder.decode(value, { stream: true });
 
         // Split by newlines in case multiple chunks arrive at once
-        for (const line of textChunk.trim().split('\n')) {
+        for (const line of textChunk.trim().split("\n")) {
           options.onMessage(JSON.parse(line) as StreamMessage);
         }
       }
       setIsLoading(false);
-    } catch(error) {
+    } catch (error) {
       console.error(error);
       setIsError(true);
       options.onError?.(error as Error);
@@ -57,6 +60,6 @@ export default function useHttpStream({ url, options = { enabled: false } }: Use
   return {
     isLoading,
     isError,
-    messages: []
-  }
+    messages: [],
+  };
 }

@@ -1,7 +1,7 @@
-import withMDX from '@next/mdx'
+import withMDX from "@next/mdx";
 
 const nextConfig = {
-  pageExtensions: ['md', 'mdx', 'ts', 'tsx'],
+  pageExtensions: ["md", "mdx", "ts", "tsx"],
 };
 
 const withNextMDX = withMDX({
