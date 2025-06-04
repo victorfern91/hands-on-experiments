@@ -1,17 +1,17 @@
-import Button from "@/components/ui/button";
+import EditorEmptyState from "@/components/topo-builder/empty-state";
+import TopoViewer from "@/components/topo-builder/topo-viewer";
 import { useEditorStore } from "@/store/editor.store";
 
 export default function Editor() {
   const backgroundImage = useEditorStore((state) => state.background);
 
   if (!backgroundImage) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <p className="text-gray-500">No background image set</p>
-        <Button>Start the upload process wizard now</Button>
-      </div>
-    );
+    return <EditorEmptyState />;
   }
 
-  return <h1>Hello world</h1>;
+  return (
+    <div className="m-auto h-full w-full">
+      <TopoViewer />
+    </div>
+  );
 }
