@@ -28,7 +28,7 @@ export default function TopoSVG() {
   const lineGenerator = line()
     .x((d) => d.x)
     .y((d) => d.y)
-    .curve(curveCardinal);
+    .curve(curveCardinal.tension(0.25));
 
   return (
     <svg
@@ -71,7 +71,7 @@ export default function TopoSVG() {
         fill="none"
         strokeWidth={8}
       />
-      {points.map((point, index) => (
+      {/*points.map((point, index) => (
         <circle
           key={index}
           cx={point.x}
@@ -79,7 +79,7 @@ export default function TopoSVG() {
           r={8}
           fill="rgba(255, 255, 255, 0.5)"
         />
-      ))}
+      ))*/}
     </svg>
   );
 }
